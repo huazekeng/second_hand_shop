@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrli.second_shop.mapper.ShsBackendPermissionMapper">
+
+    <resultMap id="permissionTreeMap" type="com.mrli.second_shop.vo.admin.PermissonTreeVo">
+        <id column="ps_id" property="psId"></id>
+        <result column="ps_name" property="psName"></result>
+        <result column="ps_pid" property="psPid"></result>
+        <result column="ps_url" property="psUrl"></result>
+        <result column="ps_level" property="psLevel"></result>
+        <result column="front_url" property="frontUrl"></result>
+        <result column="method" property="method"></result>
+        <collection property="children" javaType="ArrayList" ofType="com.mrli.second_shop.vo.admin.PermissonTreeVo" select="getChildren" column="ps_id"></collection>
+    </resultMap>
+    <select id="getPermissionByUser" resultType="com.mrli.second_shop.entity.ShsBackendPermission">
+
+        select p.* from shs_backend_permission p
+        left join shs_backend_role_permission sp on sp.p_id = p.ps_id
+        left join shs_backend_role r on r.role_id = sp.r_id
+        left join shs_backend_role_manager rm on r.role_id = rm.r_id
+        left join shs_backend_manager m on m.mg_id = rm.m_id
+        where m.mg_name = #{username}
+        and (p.ps_level = '0' or p.ps_level = '1')
+        order by p.ps_level,p.ps_id asc
+    </select>
+
+    <select id="getPermissionTree" resultMap="permissionTreeMap" parameterType="integer">
+        select p.* from shs_backend_permission p
+        left join shs_backend_role_permission sp on sp.p_id = p.ps_id
+        left join shs_backend_role r on r.role_id = sp.r_id
+        where r.role_id = #{role_id} and ps_level = '0'
+    </select>
+
+    <select id="getChildren" resultMap="permissionTreeMap" parameterType="integer">
+        select p.* from shs_backend_permission p
+        inner join shs_backend_role_permission sp on sp.p_id = p.ps_id
+        where ps_pid = #{ps_id}
+    </select>
+
+    <select id="listByRoleId" resultType="com.mrli.second_shop.entity.ShsBackendPermission">
+        select p.* from shs_backend_permission p
+        left join shs_backend_role_permission sp on sp.p_id = p.ps_id
+        left join shs_backend_role r on r.role_id = sp.r_id
+        where r.role_id = #{role_id}
+        order by p.ps_level,p.ps_id asc
+    </select>
+    <select id="getChildrenList" resultType="com.mrli.second_shop.entity.ShsBackendPermission">
+        select * from shs_backend_permission where ps_pid = #{ps_id}
+    </select>
+
+
+</mapper>

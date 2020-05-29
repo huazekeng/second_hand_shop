@@ -1,0 +1,76 @@
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/second_hand_shop?characterEncoding=utf-8&useSSL=false
+    username: root
+    password: root
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      pool-name: GuliHikariPool
+      maximum-pool-size: 12
+      connection-timeout: 60000
+      minimum-idle: 10
+      idle-timeout: 500000
+      max-lifetime: 540000
+      connection-test-query: SELECT 1
+    jackson.date-format: yyyy-MM-dd HH:mm:ss
+    spring.jackson.time-zone: GMT+8
+  devtools:  # 熱部署配置
+    restart:
+      enabled: true
+  redis:  # Redis 配置
+    host: 127.0.0.1
+    port: 6379
+    password:
+  servlet:
+    multipart:
+      max-file-size: 50Mb
+      max-request-size: 50Mb
+
+mybatis-plus:  # Mybatisplus 配置 ，mapper文件如果放在src目錄下，需要配置pom.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath:com/mrli/second_shop/mapper/xml/*.xml
+  typeAliasesPackage: com.mrli.second_shop.*.entity
+server: # 服務器配置
+  port: 80
+  servlet:
+    context-path: /
+
+#JWT 配置
+audience:
+  header: Authorization
+  # 有空格
+  tokenHead: Bearer
+  clientId: 098f6bcd4621d373cade4e832627b4f6
+  base64Secret: MDk4ZjZiY2Q0NjIxZDM3M1NhZGU0ZTgzMjYyN2I0ZjY=
+  name: restapiuser
+  expiresSecond: 18000 #token 过期时间（半个小时，单位s）
+  refreshExpiresSecond: 86400 #refeshtoken过期时间一天（单位s）
+  whiteList:
+    ## - /**/
+    - /**/categories/**
+    - /**/video/**
+    - /**/register
+    - /**/qiniu/**
+    - /**/wx/notify/**
+    - /**/token/**
+    - /**/tmp/**
+    - /**/images/**
+    - /**/api/**
+    - /**/chat/**
+
+alipay:
+  # 支付宝网关
+  url: https://openapi.alipaydev.com/gateway.do
+  # APPID 即创建应用后生成
+  app_id: 000
+  # 开发者私钥，由开发者自己生成
+  app_private_key: 000
+  # 支付宝公钥，由支付宝生成
+  alipay_public_key: 000
+  format: json
+  charset: UTF-8
+  sign_type: RSA2
+  notify_url: http://hzk.free.idcfengye.com/api/pay/alnotify

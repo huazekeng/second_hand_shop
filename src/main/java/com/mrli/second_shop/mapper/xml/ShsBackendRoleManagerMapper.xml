@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrli.second_shop.mapper.ShsBackendRoleManagerMapper">
+
+
+    <select id="getRolesByUser" resultType="com.mrli.second_shop.entity.ShsBackendRole" parameterType="java.lang.String">
+        select r.* from shs_backend_role r left join shs_backend_role_manager sr on sr.r_id = r.role_id
+        left join shs_backend_manager m on m.mg_id = sr.m_id where m.mg_name = #{username}
+    </select>
+
+</mapper>

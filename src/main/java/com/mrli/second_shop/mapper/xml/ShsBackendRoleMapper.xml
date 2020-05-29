@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrli.second_shop.mapper.ShsBackendRoleMapper">
+
+    <resultMap id="roleListMap" type="com.mrli.second_shop.vo.admin.RoleListVo">
+        <id column="role_id" property="roleId"></id>
+        <result column="role_name" property="roleName"></result>
+        <result column="role_desc" property="roleDesc"></result>
+        <result column="role_str" property="roleStr"></result>
+        <collection property="children" select="com.mrli.second_shop.mapper.ShsBackendPermissionMapper.getPermissionTree" column="role_id" javaType="ArrayList" ofType="com.mrli.second_shop.vo.admin.PermissonTreeVo"></collection>
+    </resultMap>
+
+    <select id="roleListWithPermission" resultMap="roleListMap">
+      select * from shs_backend_role
+    </select>
+    <select id="roleVoList" resultType="com.mrli.second_shop.vo.admin.RoleListVo">
+        select * from shs_backend_role
+    </select>
+</mapper>

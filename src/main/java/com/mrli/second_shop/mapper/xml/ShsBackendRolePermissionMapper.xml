@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrli.second_shop.mapper.ShsBackendRolePermissionMapper">
+
+    <select id="getRolesByUrl" resultType="com.mrli.second_shop.entity.ShsBackendRole">
+        select r.* from shs_backend_role r left join
+        shs_backend_role_permission rp on rp.r_id = r.role_id
+        left join shs_backend_permission p on p.ps_id = rp.p_id
+        where p.ps_url = #{url}
+    </select>
+    <select id="getRolesByUrlAndUser" resultType="com.mrli.second_shop.entity.ShsBackendRole">
+        select r.* from shs_backend_role r left join
+        shs_backend_role_permission rp on rp.r_id = r.role_id
+        left join shs_backend_permission p on p.ps_id = rp.p_id
+        left join shs_backend_role_manager rm on rm.r_id = r.role_id
+        left join shs_backend_manager m on m.mg_id = rm.m_id
+        where #{url} like   CONCAT('%',REPLACE(ps_url,'*',''),'%')
+        and p.ps_url is not null and p.ps_url != ''
+        and m.mg_name = #{username}
+        and p.method = #{method}
+
+    </select>
+</mapper>
